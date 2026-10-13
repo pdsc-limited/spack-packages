@@ -28,6 +28,7 @@ class Openblas(CMakePackage, MakefilePackage):
     license("BSD-3-Clause")
 
     version("develop", branch="develop")
+    version("0.3.33", sha256="6761af1d9f5d353ab4f0b7497be2643313b36c8f31caec0144bfef198e71e6ab")
     version("0.3.30", sha256="27342cff518646afb4c2b976d809102e368957974c250a25ccc965e53063c95d")
     version("0.3.29", sha256="38240eee1b29e2bde47ebb5d61160207dc68668a54cac62c076bb5032013b1eb")
     version("0.3.28", sha256="f1003466ad074e9b0c8d421a204121100b0751c96fc6fcf3d1456bd12f8a00a1")
@@ -266,6 +267,13 @@ class Openblas(CMakePackage, MakefilePackage):
     # libomp. OpenBLAS adds the correct linker flags but overwrites the
     # variables in a couple places, causing link-time failures.
     patch("openblas_append_lflags.patch", when="@:0.3.23 threads=openmp")
+
+    # Fix OpenBLAS test makefile compatibility on newer releases.
+    patch(
+        "https://github.com/OpenMathLib/OpenBLAS/commit/88705a932831c0de1ed136b461c6c239802828b2.diff?full_index=1",
+        sha256="723ddc1553b6d27ff89d96985f7732695935c0d4d8df766987702689bdb750ac",
+        when="@0.3.33",
+    )
 
     # Some builds of libomp on certain systems cause test failures related to
     # forking, so disable the specific test that's failing. This is currently
